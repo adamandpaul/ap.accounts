@@ -212,3 +212,21 @@ class TestTransaction(TestCase):
         tx.date = date(2000,01,01)
         self.assertEqual(tx.description, "some description")
         self.assertEqual(tx.date, date(2000,01,01))
+
+
+class TestQuarter(TestCase):
+    def setUp(self):
+        from ap.accounts.Quarter import Quarter
+        from ap.accounts.Transaction import Transaction
+        self.Quarter = Quarter
+        self.Transaction = Transaction
+
+    def tearDown(self):
+        pass
+
+    def test_quarter (self):
+        q = self.Quarter()
+        tx = self.Transaction()
+
+        q.transactions["1234"] = tx
+        self.assertIsInstance(q.transactions["1234"], self.Transaction)
