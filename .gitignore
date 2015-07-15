@@ -1,0 +1,9 @@
+/bin
+/parts
+/var
+/tmp
+/eggs
+/develop-eggs
+.installed.cfg
+*.egg-info
+*.pyc
