@@ -131,28 +131,24 @@ class TestEntry(TestCase):
         pass
 
 
-class TestTransaction(TestCase):
+class TestAccountsDelta(TestCase):
     def setUp(self):
         from ap.accounts.Entry import Entry
-        from ap.accounts.Transaction import Transaction
+        from ap.accounts.AccountsDelta import AccountsDelta
         self.Entry = Entry
-        self.Transaction = Transaction
+        self.AccountsDelta = AccountsDelta
 
     def tearDown(self):
         pass
 
     def test_transaction_init (self):
-        tx = self.Transaction()
-        tx.description = "some description"
-        tx.date = date(2000,01,01)
-        self.assertEqual(tx.description, "some description")
-        self.assertEqual(tx.date, date(2000,01,01))
+        tx = self.AccountsDelta()
         self.assertTrue (tx.balanced)
 
 
     def test_transaction_adding_entries (self):
         E = self.Entry
-        tx = self.Transaction()
+        tx = self.AccountsDelta()
 
         e1 = E(CREDIT, Decimal("1.0"))
         tx.add_entry("assets.cash", e1)
@@ -168,7 +164,7 @@ class TestTransaction(TestCase):
     def test_transaction_adding_nurtralized (self):
 
         E = self.Entry
-        tx = self.Transaction()
+        tx = self.AccountsDelta()
 
         e1 = E(CREDIT, Decimal("40.00"))
         e2 = E(DEBIT, Decimal("40.00"))
@@ -185,7 +181,7 @@ class TestTransaction(TestCase):
 
     def test_transaction_balancing (self):
         E = self.Entry
-        tx = self.Transaction()
+        tx = self.AccountsDelta()
 
         self.assertTrue(tx.balanced)
 
@@ -202,5 +198,17 @@ class TestTransaction(TestCase):
         self.assertTrue(tx.balanced)
 
 
+class TestTransaction(TestCase):
+    def setUp(self):
+        from ap.accounts.Transaction import Transaction
+        self.Transaction = Transaction
 
+    def tearDown(self):
+        pass
 
+    def test_transaction_init (self):
+        tx = self.Transaction()
+        tx.description = "some description"
+        tx.date = date(2000,01,01)
+        self.assertEqual(tx.description, "some description")
+        self.assertEqual(tx.date, date(2000,01,01))

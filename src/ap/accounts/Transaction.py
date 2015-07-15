@@ -1,36 +1,11 @@
 
-from ap.accounts import DEBIT, NEUTRAL, CREDIT
-from ap.accounts.Entry import Entry
+from ap.accounts.AccountsDelta import AccountsDelta
 
-class Transaction(object):
-
-    def __init__ (self):
-        self._entries = {}
+class Transaction(AccountsDelta):
+    """Transaction manages information related to a transaction"""
 
     date = None
     description = None
-
-
-    @property
-    def entries(self):
-        return self._entries
-
-    @property
-    def balanced(self):
-        total = Entry(NEUTRAL, 0)
-        for entry in self.entries.values():
-            total += entry
-        return total.direction == NEUTRAL
-                
-
-    def add_entry (self, account, entry):
-        current_entry = self.entries.get(account, Entry(NEUTRAL, 0))
-        new_entry = current_entry + entry
-        self.entries[account] = new_entry
-
-        # Remove entry if it doens't have meaning
-        if new_entry.direction == NEUTRAL:
-            del self.entries[account]
 
 
 
