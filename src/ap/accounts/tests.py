@@ -417,6 +417,6 @@ class TestBook(TestCase):
         bk.add_transaction(tx1)
         bk.add_transaction(tx2)
         self.assertTrue(
-                bk.accounts_delta(),
+                bk.accounts_delta,
                 self.Entry(CREDIT,Decimal("20.00"))
             )
