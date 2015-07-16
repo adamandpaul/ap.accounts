@@ -214,19 +214,108 @@ class TestTransaction(TestCase):
         self.assertEqual(tx.date, date(2000,01,01))
 
 
+
+
+class TestFinDate(TestCase):
+    def setUp(self):
+        from ap.accounts.FinDate import FinDate
+        from ap.accounts.FinYear import FinYear
+        self.FinDate = FinDate
+        self.FinYear = FinYear
+    def tearDown(self):
+        pass
+
+    def test_quarter(self):
+        self.assertEqual(self.FinDate(2000,1,1).quarter, 1)
+        self.assertEqual(self.FinDate(2000,4,1).quarter, 2)
+        self.assertEqual(self.FinDate(2000,7,1).quarter, 3)
+        self.assertEqual(self.FinDate(2000,10,1).quarter, 4)
+
+    def test_finquarter(self):
+        self.assertEqual(self.FinDate(2000,1,1).finquarter, 3)
+        self.assertEqual(self.FinDate(2000,4,1).finquarter, 4)
+        self.assertEqual(self.FinDate(2000,7,1).finquarter, 1)
+        self.assertEqual(self.FinDate(2000,10,1).finquarter, 2)
+
+    def test_finyear(self):
+        self.assertEqual(self.FinDate(2000,1,1).finyear, 1999)
+        self.assertEqual(self.FinDate(2000,10,1).finyear, 2000)
+
+
+
+class TestFinYear(TestCase):
+    def setUp(self):
+        from ap.accounts.FinYear import FinYear
+        from ap.accounts.FinDate import FinDate
+        self.FinYear = FinYear
+        self.FinDate = FinDate
+
+    def tearDown(self):
+        pass
+
+    def test_properties(self):
+        fy = self.FinYear(2010)
+        self.assertEqual(fy.start_year, 2010)
+        self.assertEqual(fy.end_year, 2011)
+        self.assertEqual(str(fy), "2010-11")
+        self.assertEqual(repr(fy), "<FinYear 2010-11>")
+        self.assertEqual(fy.start, date(2010,7,1))
+        self.assertEqual(fy.end, date(2011,6,30))
+
+
+class TestFinQuarter(TestCase):
+    def setUp(self):
+        from ap.accounts.FinQuarter import FinQuarter
+        self.FinQuarter = FinQuarter
+
+    def tearDown(self):
+        pass
+
+
+    def test_properties(self):
+        fq = self.FinQuarter(2000, 1)
+        self.assertEqual(fq.year, 2000)
+        self.assertEqual(fq.quarter, 3)
+        self.assertEqual(fq.start_month,7)
+        self.assertEqual(fq.end_month,9)
+        self.assertEqual(fq.start, date(2000,7,1))
+        self.assertEqual(fq.end, date(2000,9,30))
+        self.assertEqual(str(fq), "2000-01Q1")
+        self.assertEqual(repr(fq), "<FinQuarter 2000-01Q1>")
+
+
+
 class TestQuarter(TestCase):
     def setUp(self):
-        from ap.accounts.Quarter import Quarter
+        from ap.accounts.BookQuarter import BookQuarter
         from ap.accounts.Transaction import Transaction
-        self.Quarter = Quarter
+        self.BookQuarter = BookQuarter
         self.Transaction = Transaction
 
     def tearDown(self):
         pass
 
     def test_quarter (self):
-        q = self.Quarter()
+        q = self.BookQuarter(2000, 1)
         tx = self.Transaction()
 
         q.transactions["1234"] = tx
         self.assertIsInstance(q.transactions["1234"], self.Transaction)
+
+    def test_construct_id(self):
+        q = self.BookQuarter(2000, 1)
+        tx = self.Transaction()
+        tx.date = date(2000, 6, 10)
+
+        id1 = q.construct_id(tx)
+        id2 = q.construct_id(tx)
+        self.assertNotEqual(id1, id2)
+
+        id3 = q.construct_id(tx, "my-ending")
+        self.assertIn("my-ending", id3)
+
+    def test_add_transaction(self):
+
+
+
+
