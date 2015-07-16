@@ -36,6 +36,14 @@ finquarter_for_month = {
 
 class FinDate (date):
 
+    def __new__ (cls, *args, **kwargs):
+        if type(args[0]) == int:
+            return date.__new__(cls, *args, **kwargs)
+        else:
+            d = args[0]
+            return date.__new__(cls, d.year, d.month, d.day)
+            
+
     @property
     def quarter(self):
         return quarter_for_month[self.month]

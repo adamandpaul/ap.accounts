@@ -28,6 +28,17 @@ class AccountsDelta(object):
         if new_entry.direction == NEUTRAL:
             del self.entries[account]
 
+    def __add__ (self, other):
+        delta = AccountsDelta()
+
+        for account, entry in self.entries.items():
+            delta.add_entry(account, entry)
+
+        for account, entry in other.entries.items():
+            delta.add_entry(account, entry)
+
+        return delta
+
 
 
 

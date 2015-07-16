@@ -225,6 +225,11 @@ class TestFinDate(TestCase):
     def tearDown(self):
         pass
 
+    def test_init(self):
+        self.assertEqual(self.FinDate(date(2010,1,1)), self.FinDate(2010,1,1))
+        self.assertEqual(self.FinDate(self.FinDate(2010,1,1)), self.FinDate(2010,1,1))
+
+
     def test_quarter(self):
         self.assertEqual(self.FinDate(2000,1,1).quarter, 1)
         self.assertEqual(self.FinDate(2000,4,1).quarter, 2)
@@ -255,7 +260,7 @@ class TestFinYear(TestCase):
 
     def test_properties(self):
         fy = self.FinYear(2010)
-        self.assertEqual(fy.start_year, 2010)
+        self.assertEqual(fy.finyear, 2010)
         self.assertEqual(fy.end_year, 2011)
         self.assertEqual(str(fy), "2010-11")
         self.assertEqual(repr(fy), "<FinYear 2010-11>")
@@ -285,12 +290,15 @@ class TestFinQuarter(TestCase):
 
 
 
-class TestQuarter(TestCase):
+class TestBookQuarter(TestCase):
     def setUp(self):
         from ap.accounts.BookQuarter import BookQuarter
         from ap.accounts.Transaction import Transaction
         self.BookQuarter = BookQuarter
         self.Transaction = Transaction
+
+        from ap.accounts.Entry import Entry
+        self.Entry = Entry
 
     def tearDown(self):
         pass
@@ -315,7 +323,68 @@ class TestQuarter(TestCase):
         self.assertIn("my-ending", id3)
 
     def test_add_transaction(self):
+        
+
+        q = self.BookQuarter(2000, 1)
+        tx1 = self.Transaction()
+        tx1.date = date(2000, 6, 10)
+        tx1.add_entry("assets.cash", self.Entry(CREDIT, Decimal("10.00")))
+        tx2 = self.Transaction()
+        tx2.date = date(2000, 6, 10)
+        tx2.add_entry("assets.cash", self.Entry(CREDIT, Decimal("10.00")))
+
+        q.add_transaction(tx1)
+        q.add_transaction(tx2)
+
+        self.assertEqual(len(q.transactions),2)
+
+        self.assertEqual(
+                q.accounts_delta.entries["assets.cash"],
+                self.Entry(CREDIT,Decimal("20.00"))
+            )
+
+
+class TestBookYear(TestCase):
+    def setUp(self):
+        from ap.accounts.BookYear import BookYear
+        self.BookYear = BookYear
+
+        from ap.accounts.Transaction import Transaction
+        self.Transaction = Transaction
+        
+        from ap.accounts.Entry import Entry
+        self.Entry = Entry
 
 
 
+    def tearDown(self):
+        pass
+
+
+    def test_bookyear(self):
+
+        by = self.BookYear(2000)
+
+        self.assertIsNotNone(by.quarters[1])
+        self.assertIsNotNone(by.quarters[2])
+        self.assertIsNotNone(by.quarters[3])
+        self.assertIsNotNone(by.quarters[4])
+
+        tx1 = self.Transaction()
+        tx1.date = date(2000, 7, 10)
+        tx1.add_entry("assets.cash", self.Entry(CREDIT, Decimal("10.00")))
+        tx2 = self.Transaction()
+        tx2.date = date(2000, 10, 10)
+        tx2.add_entry("assets.cash", self.Entry(CREDIT, Decimal("10.00")))
+
+        by.add_transaction(tx1)
+        by.add_transaction(tx2)
+
+        self.assertEqual(by.quarters[1].transactions.values()[0], tx1)
+        self.assertEqual(by.quarters[2].transactions.values()[0], tx2)
+
+        self.assertEqual(
+                by.accounts_delta.entries["assets.cash"],
+                self.Entry(CREDIT,Decimal("20.00"))
+            )
 

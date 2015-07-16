@@ -19,10 +19,8 @@ class BookQuarter(FinQuarter):
     def accounts_delta(self):
         delta = AccountsDelta()
         for tx in self.transactions.values():
-            for account, entry in tx.entries.values():
-                delta.add_entry(account, entry)
+            delta += tx
         return delta
-
     
     _counter = 0
     def construct_id (self, tx, suffix_tx_id=''):
