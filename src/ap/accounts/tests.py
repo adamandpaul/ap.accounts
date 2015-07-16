@@ -323,7 +323,7 @@ class TestBookQuarter(TestCase):
         self.assertIn("my-ending", id3)
 
     def test_add_transaction(self):
-        
+
 
         q = self.BookQuarter(2000, 1)
         tx1 = self.Transaction()
@@ -351,7 +351,7 @@ class TestBookYear(TestCase):
 
         from ap.accounts.Transaction import Transaction
         self.Transaction = Transaction
-        
+
         from ap.accounts.Entry import Entry
         self.Entry = Entry
 
@@ -388,3 +388,35 @@ class TestBookYear(TestCase):
                 self.Entry(CREDIT,Decimal("20.00"))
             )
 
+class TestBook(TestCase):
+    def setUp(self):
+        from ap.accounts.Book import Book
+        self.Book = Book
+
+        from ap.accounts.BookYear import BookYear
+        self.BookYear = BookYear
+
+        from ap.accounts.Transaction import Transaction
+        self.Transaction = Transaction
+
+        from ap.accounts.Entry import Entry
+        self.Entry = Entry
+    def tearDown(self):
+        pass
+
+    def test_book(self):
+        bk = self.Book()
+
+        tx1 = self.Transaction()
+        tx1.date = date(2000, 7, 10)
+        tx1.add_entry("assets.cash", self.Entry(CREDIT, Decimal("10.00")))
+        tx2 = self.Transaction()
+        tx2.date = date(2001, 10, 10)
+        tx2.add_entry("assets.cash", self.Entry(CREDIT, Decimal("10.00")))
+
+        bk.add_transaction(tx1)
+        bk.add_transaction(tx2)
+        self.assertTrue(
+                bk.accounts_delta(),
+                self.Entry(CREDIT,Decimal("20.00"))
+            )
