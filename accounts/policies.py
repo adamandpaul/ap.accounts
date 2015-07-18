@@ -6,7 +6,7 @@ from ap.accounts.policy import policy
 @policy(is_has=('inc-gst','purchase'))
 def payed_gst_on_purchase(context, data):
     gst_payed = 234
-    transaction.add_entry("liabilities.gst", Entry(DEBIT, gst_payed)
+    transaction.add_entry("liabilities.gst", Entry(DEBIT, gst_payed))
     transaction.add_entry("equity.retained_profets", Entry(CREDIT, gst_payed))
 
 
