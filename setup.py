@@ -39,5 +39,7 @@ setup(name='ap.accounts',
       ],
       entry_points="""
       # -*- Entry points: -*-
+      [console_scripts]
+      process_accounts = ap.accounts.process_accounts:process_accounts
       """,
       )
