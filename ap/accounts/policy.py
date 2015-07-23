@@ -1,31 +1,49 @@
+"""Contains objects for creating policies"""
 
-_policy_count = 0
+policy_count = 0
 
+
+class WrappedPolicy(object):
+    """The wrapper for the policy function"""
+
+    func = None
+    policy_info = None
+    tests = None
+
+    def __init__(self):
+        self.tests = []
+
+    def __call__(self, context, event):
+        self.func(context, event) # pylint: disable=not-callable
+
+    def test(self, context_factory):
+        """Test the policy"""
+
+        for event, test in self.tests:
+            context = context_factory()
+            self(context, event)
+            test(context, event)
+
+    def add_test(self, event):
+        """Function decorator to add a test to a policy"""
+
+        def wrapper(func):
+            """wrapper for test functions"""
+            self.tests.append(event, func)
+            return func
+        return wrapper
 
 
 def policy(**kwargs):
-    kwargs = kwargs.copy()
-    def policy_wrapper(func):
+    """Function decorator to allow for anotated policies"""
 
-        # Set Policy Info
-        global _policy_count
-        _policy_count = _policy_count + 1
-        kwargs["order"] = _policy_count
-        func.policy_info = kwargs
+    wrapped_policy = WrappedPolicy()
+    wrapped_policy.policy_info = kwargs
 
-        # Set Null test data
-        func.test_data = None
+    def wrapper(func):
+        """policy function wrapper"""
+        wrapped_policy.func = func
+        return wrapped_policy
 
-        # Set Empty
-        func._test = None
-        def test_decorator(f):
-            func._test = f
-            return f
-        func.test = test_decorator
-
-        return func
-
-
-    return policy_wrapper
-
+    return wrapper
 
