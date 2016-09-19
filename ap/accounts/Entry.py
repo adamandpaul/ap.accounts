@@ -5,7 +5,10 @@ In this case an entry is just a Decimal number with the DR/CR information added.
 """ 
 
 from decimal import Decimal
-from ap.accounts import DEBIT, NEUTRAL, CREDIT
+
+DEBIT = "DEBIT"
+NEUTRAL = "NEUTRAL"
+CREDIT = "CREDIT"
 
 class Entry(object):
     """An entry object represent the financial component in a change in a single account
