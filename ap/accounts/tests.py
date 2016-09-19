@@ -4,131 +4,15 @@ from decimal import Decimal
 
 from datetime import date
 
-class TestDirections(TestCase):
-    def test_directions(self):
-        from ap.accounts import CREDIT, DEBIT, NEUTRAL
-        self.assertIsNotNone(DEBIT)
-        self.assertIsNotNone(CREDIT)
-        self.assertIsNotNone(NEUTRAL)
-        self.assertNotEqual(DEBIT, CREDIT)
-        self.assertNotEqual(DEBIT, NEUTRAL)
-        self.assertNotEqual(CREDIT, NEUTRAL)
+import unittest
+import pkg_resources
 
+from unittest import TestLoader
 
-class TestEntry(TestCase):
-    def setUp(self):
-        from ap.accounts.Entry import Entry
-        self.Entry = Entry
-
-
-    def assertAddEntriesResult(self, a, b, t):
-        r1 = a + b
-        r2 = b + a
-        self.assertEqual(r1, t)
-        self.assertEqual(r2, t)
-
-
-    def test_init_entry(self):
-        e = self.Entry(DEBIT, Decimal("110.00"))
-        self.assertIsNotNone(e)
-        self.assertEqual(e.direction, DEBIT)
-        self.assertEqual(e.amount, Decimal("110.00"))
-
-        self.assertRaises(ValueError, self.Entry, NEUTRAL, Decimal("1.0"))
-
-        eneg_debit = self.Entry(DEBIT, Decimal("-30.00"))
-        self.assertEqual(eneg_debit.direction, CREDIT)
-        self.assertEqual(eneg_debit.amount, Decimal("30.00"))
-
-        eneg_credit = self.Entry(CREDIT, Decimal("-20.00"))
-        self.assertEqual(eneg_credit.direction, DEBIT)
-        self.assertEqual(eneg_credit.amount, Decimal("20.00"))
-
-
-        ezero_debit = self.Entry(DEBIT, Decimal("0"))
-        self.assertEqual(ezero_debit.direction, NEUTRAL)
-
-        ezero_credit = self.Entry(CREDIT, Decimal("0"))
-        self.assertEqual(ezero_credit.direction, NEUTRAL)
-
-
-
-    def test_two_debits(self):
-        a = self.Entry(DEBIT, Decimal("1.0"))
-        b = self.Entry(DEBIT, Decimal("2.0"))
-        t = self.Entry(DEBIT, Decimal("3.0"))
-        self.assertAddEntriesResult(a, b, t)
-
-
-
-    def test_two_credits(self):
-        a = self.Entry(CREDIT, Decimal("1.0"))
-        b = self.Entry(CREDIT, Decimal("2.0"))
-        t = self.Entry(CREDIT, Decimal("3.0"))
-        self.assertAddEntriesResult(a, b, t)
-
-
-
-    def test_debit_and_smaller_credit(self):
-        a = self.Entry(DEBIT, Decimal("10.0"))
-        b = self.Entry(CREDIT, Decimal("1.0"))
-        t = self.Entry(DEBIT, Decimal("9.0"))
-        self.assertAddEntriesResult(a, b, t)
-
-    def test_credit_and_smaller_debit(self):
-        a = self.Entry(CREDIT, Decimal("10.0"))
-        b = self.Entry(DEBIT, Decimal("1.0"))
-        t = self.Entry(CREDIT, Decimal("9.0"))
-        self.assertAddEntriesResult(a, b, t)
-
-
-
-    def test_debit_and_larger_credit(self):
-        a = self.Entry(CREDIT, Decimal("10.0"))
-        b = self.Entry(DEBIT, Decimal("11.0"))
-        t = self.Entry(DEBIT, Decimal("1.0"))
-        self.assertAddEntriesResult(a, b, t)
-
-    def test_credit_and_larger_debit(self):
-        a = self.Entry(DEBIT, Decimal("10.0"))
-        b = self.Entry(CREDIT, Decimal("11.0"))
-        t = self.Entry(CREDIT, Decimal("1.0"))
-        self.assertAddEntriesResult(a, b, t)
-
-
-    def test_debit_and_credit_equal(self):
-        a = self.Entry(DEBIT, Decimal("10.0"))
-        b = self.Entry(CREDIT, Decimal("10.0"))
-        t = self.Entry(NEUTRAL, Decimal("0.0"))
-        self.assertAddEntriesResult(a, b, t)
-
-
-
-    def test_debit_and_neutral(self):
-        a = self.Entry(DEBIT, Decimal("10.0"))
-        b = self.Entry(NEUTRAL, Decimal("0.0"))
-        t = a
-        self.assertAddEntriesResult(a, b, t)
-
-
-    def test_credit_and_neutral(self):
-        a = self.Entry(CREDIT, Decimal("10.0"))
-        b = self.Entry(NEUTRAL, Decimal("0.0"))
-        t = a
-        self.assertAddEntriesResult(a, b, t)
-
-
-
-    def test_neutral_and_neutral(self):
-        a = self.Entry(NEUTRAL, Decimal("0.0"))
-        b = a
-        t = a
-        self.assertAddEntriesResult(a, b, t)
-
-
-
-    def tearDown(self):
-        pass
+def test_suite():
+    # We need to specificy the top level dir because namespaces don't work too good with unittest
+    top_level_dir = pkg_resources.Environment()['mo.submitclaim'][0].location
+    return TestLoader().discover('mo.submitclaim', pattern='*_test.py', top_level_dir=top_level_dir)
 
 
 class TestAccountsDelta(TestCase):
