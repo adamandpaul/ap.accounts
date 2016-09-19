@@ -31,6 +31,8 @@ class Entry(object):
           amount (Decimal): the magnitude of the entry
         """
 
+
+
         if direction not in (DEBIT, CREDIT, NEUTRAL):
             raise ValueError()
 
@@ -38,7 +40,9 @@ class Entry(object):
             if amount != 0:
                 raise ValueError()
 
-        if amount < 0:
+        amount = Decimal(amount)
+
+        if amount < Decimal('0'):
 
             if direction == DEBIT:
                 new_direction = CREDIT
@@ -48,7 +52,7 @@ class Entry(object):
             direction = new_direction
             amount = amount * Decimal("-1")
 
-        if amount == 0:
+        if amount == Decimal(0):
             direction = NEUTRAL
 
         self.direction, self.amount = direction, amount
@@ -67,7 +71,7 @@ class Entry(object):
             else:
                 result = Entry(other.direction, other.amount - self.amount)
 
-            if result.amount == 0:
+            if result.amount == Decimal('0'):
                 return Entry(NEUTRAL, Decimal("0.0"))
             else:
                 return result
