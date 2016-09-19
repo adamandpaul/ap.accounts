@@ -127,7 +127,7 @@ class TestEntry(TestCase):
 
         for test_name, a_direction, a_amount, b_direction, b_amount, expected_result_direction, expected_result_amount in test_data:
             entry_a = self.Entry(a_direction, a_amount)
-            entry_bb = self.Entry(b_direction, b_amount)
+            entry_b = self.Entry(b_direction, b_amount)
             expected_result = self.Entry(expected_result_direction, expected_result_amount)
 
             result = entry_a + entry_b
