@@ -6,9 +6,9 @@ In this case an entry is just a Decimal number with the DR/CR information added.
 
 from decimal import Decimal
 
-DEBIT = "DEBIT"
-NEUTRAL = "NEUTRAL"
-CREDIT = "CREDIT"
+DEBIT = 'DEBIT'
+NEUTRAL = 'NEUTRAL'
+CREDIT = 'CREDIT'
 
 class Entry(object):
     """An entry object represent the financial component in a change in a single account
@@ -48,7 +48,7 @@ class Entry(object):
                 new_direction = DEBIT
 
             direction = new_direction
-            amount = amount * Decimal("-1")
+            amount = amount * Decimal('-1')
 
         if amount == Decimal(0):
             direction = NEUTRAL
@@ -70,7 +70,7 @@ class Entry(object):
                 result = Entry(other.direction, other.amount - self.amount)
 
             if result.amount == Decimal('0'):
-                return Entry(NEUTRAL, Decimal("0.0"))
+                return Entry(NEUTRAL, Decimal('0.0'))
             else:
                 return result
 
