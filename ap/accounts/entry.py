@@ -31,7 +31,7 @@ class Entry(object):
           amount (Decimal): the magnitude of the entry
         """
 
-
+        amount = Decimal(amount)
 
         if direction not in (DEBIT, CREDIT, NEUTRAL):
             raise ValueError('Invalid direction given')
@@ -39,8 +39,6 @@ class Entry(object):
         if direction == NEUTRAL:
             if amount != Decimal('0'):
                 raise ValueError('Non-zero amount {!r} given for an Entry of NEUTRAL direction'.format(amount))
-
-        amount = Decimal(amount)
 
         if amount < Decimal('0'):
 
