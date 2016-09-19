@@ -23,8 +23,8 @@ class TestDirections(TestCase):
 class TestEntry(TestCase):
 
     def setUp(self):
-        super(Testentry, self).setUp()
-        from ap.accounts.Entry import Entry
+        super(TestEntry, self).setUp()
+        from ap.accounts.entry import Entry
         self.Entry = Entry
 
     def test_init_entry(self):
@@ -86,7 +86,7 @@ class TestEntry(TestCase):
             b = self.Entry(b_direction, b_amount)
             self.assertTrue(a == b, "Expected two identical entries to evaluate a == b to be true")
             self.assertEqual(a.amount, b.amount, "Expected two identical entries to have the same amount")
-            self.assertEqual(a.direction, b.direction, "Expected two identiacl entries to have the same direction"))
+            self.assertEqual(a.direction, b.direction, "Expected two identiacl entries to have the same direction")
 
 
     def test_entry_inequality(self):
@@ -106,7 +106,7 @@ class TestEntry(TestCase):
             a = self.Entry(a_direction, a_amount)
             b = self.Entry(b_direction, b_amount)
             self.assertFalse(a == b, "Expected two different entries to evaluate a == b to be false")
-            self.assertTrue( (a.amount != b.amount) or (a.direction != b.direction)
+            self.assertTrue( (a.amount != b.amount) or (a.direction != b.direction),
                     "Expected that two different entries would differ on either amount or direction")
 
     def test_addition(self):
