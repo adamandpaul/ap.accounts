@@ -1,5 +1,5 @@
 from unittest import TestCase
-from ap.accounts import DEBIT, CREDIT, NEUTRAL
+from ap.accounts.entry import DEBIT, CREDIT, NEUTRAL
 from decimal import Decimal
 
 from datetime import date
@@ -11,8 +11,8 @@ from unittest import TestLoader
 
 def test_suite():
     # We need to specificy the top level dir because namespaces don't work too good with unittest
-    top_level_dir = pkg_resources.Environment()['mo.submitclaim'][0].location
-    return TestLoader().discover('mo.submitclaim', pattern='*_test.py', top_level_dir=top_level_dir)
+    top_level_dir = pkg_resources.Environment()['ap.accounts'][0].location
+    return TestLoader().discover('ap.accounts', pattern='*_test.py', top_level_dir=top_level_dir)
 
 
 class TestAccountsDelta(TestCase):
