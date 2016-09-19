@@ -34,11 +34,11 @@ class Entry(object):
 
 
         if direction not in (DEBIT, CREDIT, NEUTRAL):
-            raise ValueError()
+            raise ValueError('Invalid direction given')
 
         if direction == NEUTRAL:
-            if amount != 0:
-                raise ValueError()
+            if amount != Decimal('0'):
+                raise ValueError('Non-zero amount {!r} given for an Entry of NEUTRAL direction'.format(amount))
 
         amount = Decimal(amount)
 
