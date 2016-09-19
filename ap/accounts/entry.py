@@ -83,4 +83,16 @@ class Entry(object):
         direction_test = self.direction == other.direction
         amount_test = self.amount == other.amount
         return direction_test and amount_test and True
+  
+   
+    def __str__(self):
+        formatted_amount = self.amount.quantize(Decimal('0.00'))
+        formatted_direction = {DEBIT: 'DR',
+                              CREDIT: 'CR',
+                              NEUTRAL: '  '}[self.direction]
+        return '{} {}'.format(formatted_amount, formatted_direction)
+    
+    def __repr__ (self):
+        return '<{} {}>'.format(self.__class__.__name__, str(self))
+ 
 

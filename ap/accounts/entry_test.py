@@ -62,6 +62,34 @@ class TestEntry(TestCase):
         self.assertEqual(ezero_credit.direction, NEUTRAL,
                 "Expected a zero amount to change a CREDIT direction to a NEUTRAL one")
 
+    def test_entry_str(self):
+
+        Entry = self.Entry
+
+        test_data = [
+                (Entry(DEBIT, '11'), '11.00 DR'),
+                (Entry(CREDIT, '11.00'), '11.00 CR'),
+                (Entry(NEUTRAL, '0'), '0.00   '),
+                ]
+
+        for entry, expected_result in test_data:
+            self.assertEqual(str(entry), expected_result, 'Expected {!r} to convert to str {}'.format(entry, expected_result))
+
+
+    def test_entry_str(self):
+
+        Entry = self.Entry
+
+        test_data = [
+                (Entry(DEBIT, '11'), '<Entry 11.00 DR>'),
+                (Entry(CREDIT, '11.00'), '<Entry 11.00 CR>'),
+                (Entry(NEUTRAL, '0'), '<Entry 0.00   >'),
+                ]
+
+        for entry, expected_result in test_data:
+            self.assertEqual(repr(entry), expected_result, 'Expected {!r} to convert to str {}'.format(entry, expected_result))
+
+
     def test_entry_equality(self):
         """Tests that the __eq__ magic mthod works"""
 
