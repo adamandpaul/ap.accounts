@@ -1,12 +1,31 @@
+# -*- coding: utf-8 -*-
+"""Code relating to an accounting "entry" as it relates to the ap.accounts package.
+
+In this case an entry is just a Decimal number with the DR/CR information added.
+""" 
+
 from decimal import Decimal
 from ap.accounts import DEBIT, NEUTRAL, CREDIT
 
 class Entry(object):
+    """An entry object represent the financial component in a change in a single account
+
+    For ap.accounts. This object doens't store meta information or date. These
+    extra bits of information are stored on the Transaction object.
+    """
+
     def __init__ (self, direction, amount):
         """Initiate an Entry object
 
+        The Entry object likes the amount to be positive. If it is negitive then
+        the direction will be flipped in order to make the amount positive.
+
+        If a direction is specified as non NEUTRAL, yet the amount is zero. Then
+        the drection property will be set to NEUTRAL.
+
         Args:
           direction (Direction): Either a DEBIT, CREDIT or NEUTRAL
+          amount (Decimal): the magnitude of the entry
         """
 
         if direction not in (DEBIT, CREDIT, NEUTRAL):
@@ -59,3 +78,4 @@ class Entry(object):
         direction_test = self.direction == other.direction
         amount_test = self.amount == other.amount
         return direction_test and amount_test and True
+
