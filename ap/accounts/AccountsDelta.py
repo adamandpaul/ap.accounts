@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""Deltas concerns objects which record changes in an accouting system.
+
+These objects are used as the basis of accouting transactions themselvs
+and metrics operations
+"""
+
 from ap.accounts import DEBIT, NEUTRAL, CREDIT
 from ap.accounts.Entry import Entry
 
