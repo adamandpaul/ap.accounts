@@ -127,13 +127,13 @@ class TestEntry(TestCase):
                      (DEBIT, "1", CREDIT, "1"),
 
                      # Test where the direction gets changed or flipped
-                     (DEBIT, "-1", DEBIT, "-1"),
-                     (CREDIT, "-1", CREDIT, "-1"),]
+                     (DEBIT, "-1", DEBIT, "1"),
+                     (CREDIT, "-1", CREDIT, "1"),]
 
         for a_direction, a_amount, b_direction, b_amount in test_data:
             a = self.Entry(a_direction, a_amount)
             b = self.Entry(b_direction, b_amount)
-            self.assertFalse(a == b, "Expected two different entries to evaluate a == b to be false")
+            self.assertFalse(a == b, "Expected two different entries {!r} {!r} to evaluate a == b to be false".format(a, b))
             self.assertTrue( (a.amount != b.amount) or (a.direction != b.direction),
                     "Expected that two different entries would differ on either amount or direction")
 
