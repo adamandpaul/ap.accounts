@@ -93,9 +93,9 @@ class TestTransaction(TestCase):
     def test_transaction_init (self):
         tx = self.Transaction()
         tx.description = "some description"
-        tx.date = date(2000,01,01)
+        tx.date = date(2000,1,1)
         self.assertEqual(tx.description, "some description")
-        self.assertEqual(tx.date, date(2000,01,01))
+        self.assertEqual(tx.date, date(2000,1,1))
 
 
 
