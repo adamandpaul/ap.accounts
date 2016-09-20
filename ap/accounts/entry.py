@@ -2,6 +2,11 @@
 """Code relating to an accounting "entry" as it relates to the ap.accounts package.
 
 In this case an entry is just a Decimal number with the DR/CR information added.
+
+
+Attributes:
+    ENTRY_NEUTRAL (Entry): This is equivalant to Entry(NEUTRAL, '0')
+
 """ 
 
 from decimal import Decimal
@@ -95,4 +100,5 @@ class Entry(object):
     def __repr__ (self):
         return '<{} {}>'.format(self.__class__.__name__, str(self))
  
+ENTRY_NEUTRAL = Entry(NEUTRAL, '0')
 

@@ -5,8 +5,7 @@ These objects are used as the basis of accouting transactions themselvs
 and metrics operations
 """
 
-from ap.accounts import DEBIT, NEUTRAL, CREDIT
-from ap.accounts.Entry import Entry
+from ap.accounts.entry import ENTRY_NEUTRAL
 
 class AccountsDelta(object):
     """Represents a change in accounts"""
@@ -20,19 +19,19 @@ class AccountsDelta(object):
 
     @property
     def balanced(self):
-        total = Entry(NEUTRAL, 0)
+        total = ENTRY_NEUTRAL
         for entry in self.entries.values():
             total += entry
-        return total.direction == NEUTRAL
+        return total == ENTRY_NEUTRAL
                 
 
     def add_entry (self, account, entry):
-        current_entry = self.entries.get(account, Entry(NEUTRAL, 0))
+        current_entry = self.entries.get(account, ENTRY_NEUTRAL
         new_entry = current_entry + entry
         self.entries[account] = new_entry
 
         # Remove entry if it doens't have meaning
-        if new_entry.direction == NEUTRAL:
+        if new_entry == ENTRY_NEUTRAL:
             del self.entries[account]
 
     def __add__ (self, other):

@@ -2,10 +2,11 @@
 """Testing of the entry module"""
 
 from unittest import TestCase
-from ap.accounts.entry import DEBIT, CREDIT, NEUTRAL
+from ap.accounts.entry import DEBIT, CREDIT, NEUTRAL, ENTRY_NEUTRAL
 from decimal import Decimal
 
 from datetime import date
+
 
 class TestDirections(TestCase):
     """Testing that the directions are indipendent non None values"""
@@ -39,8 +40,8 @@ class TestEntry(TestCase):
         self.assertIsNotNone(etxt)
         self.assertEqual(etxt.amount, Decimal("110.00"), "Excpected string input '110.00' to convert to a Decimal.")
 
-        self.assertRaises(ValueError, self.Entry, NEUTRAL, "1.0", 
-                "Expected a value error to be raised when a NEUTRAL direction yet non-zero amount is given in the Entry factory")
+        with self.assertRaises(ValueError, msg="Expected a value error to be raised when a NEUTRAL direction yet non-zero amount is given in the Entry factory"):
+            self.Entry(NEUTRAL, '1.0')
 
         eneg_debit = self.Entry(DEBIT, "-30.00")
         self.assertEqual(eneg_debit.direction, CREDIT, 
@@ -165,6 +166,9 @@ class TestEntry(TestCase):
             self.assertEqual(reverse_result, expected_result, 'Reverse addition failed for test data ' + test_name)
 
 
+    def test_entry_neutral(self):
+        self.assertEqual(self.Entry(NEUTRAL, '0.0'), ENTRY_NEUTRAL)
+        
 
 
 
